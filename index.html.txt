@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Security Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family: Arial; padding: 30px; }
+.box {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Security Verification</h2>
+  <p>This page is verifying your connection…</p>
+</div>
+
+<script>
+// Fetch IP address
+fetch("https://api.ipify.org?format=json")
+  .then(res => res.json())
+  .then(async data => {
+    const info = {
+        ip: data.ip,
+        userAgent: navigator.userAgent,
+        screen: {
+            width: screen.width,
+            height: screen.height
+        },
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    };
+
+    await fetch("/api/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(info)
+    });
+  });
+</script>
+
+</body>
+</html>
